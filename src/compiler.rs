@@ -102,6 +102,7 @@ impl Compiler {
                 }
             }
         }
+        self.nesting = 0;
         self.append_source("}");
     }
 
