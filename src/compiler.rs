@@ -56,58 +56,58 @@ impl Compiler {
         }
     }
 
-    fn __init_array(&mut self) {
-        self.__append_source(format!("char arr[{}] = {{0}}; char* ptr = arr;", self.size));
+    fn init_array(&mut self) {
+        self.append_source(format!("char arr[{}] = {{0}}; char* ptr = arr;", self.size));
     }
 
-    fn __append_source(&mut self, s: impl AsRef<str>) {
+    fn append_source(&mut self, s: impl AsRef<str>) {
         let string = s.as_ref().to_string();
         let fmt_string = format!("{}{}\n", "\t".repeat(self.nesting), string);
         self.source.push_str(fmt_string.as_str());
     }
 
-    fn __write_to_source(&mut self) {
+    fn write_to_source(&mut self) {
         let tokens = self.tokens.clone();
         for c in tokens {
             match c {
                 '+' => {
-                    self.__append_source("++*ptr;");
+                    self.append_source("++*ptr;");
                 }
                 '-' => {
-                    self.__append_source("--*ptr;");
+                    self.append_source("--*ptr;");
                 }
                 '<' => {
-                    self.__append_source("--ptr;");
+                    self.append_source("--ptr;");
                 }
                 '>' => {
-                    self.__append_source("++ptr;");
+                    self.append_source("++ptr;");
                 }
                 '[' => {
-                    self.__append_source("while (*ptr)");
-                    self.__append_source("{");
+                    self.append_source("while (*ptr)");
+                    self.append_source("{");
                     self.nesting += 1;
                 }
                 ']' => {
                     self.nesting -= 1;
-                    self.__append_source("}");
+                    self.append_source("}");
                 }
                 ',' => {
-                    self.__append_source("*ptr = getchar();");
+                    self.append_source("*ptr = getchar();");
                 }
                 '.' => {
-                    self.__append_source("putchar(*ptr);");
+                    self.append_source("putchar(*ptr);");
                 }
                 _ => {
                     eprintln!("an invalid character made it past the parser: {}", c)
                 }
             }
         }
-        self.__append_source("}");
+        self.append_source("}");
     }
 
     pub fn write_to_c_file(&mut self) {
-        self.__init_array();
-        self.__write_to_source();
+        self.init_array();
+        self.write_to_source();
         match self.file.write(self.source.as_bytes()) {
             Ok(_) => {}
             Err(e) => {
