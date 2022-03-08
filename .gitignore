@@ -11,3 +11,6 @@ Cargo.lock
 
 # JetBrains
 .idea/
+
+# Output
+out.*
