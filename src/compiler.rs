@@ -85,6 +85,7 @@ impl Compiler {
                 }
             }
         }
+        self.append_source("return 0;");
         self.nesting = 0;
         self.append_source("}");
     }
