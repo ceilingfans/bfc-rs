@@ -3,6 +3,7 @@ Yet another [Brainfuck](https://en.wikipedia.org/wiki/Brainfuck) to C transpiler
 
 ## Before starting
 `bfc-rs` has only 1 function, transpiling Brainfuck to c.
+
 **It does**
 * allocated a statically sized tape, 30 000 in length (this will be dynamic in future)
 * write the transpiled c code to a c file
