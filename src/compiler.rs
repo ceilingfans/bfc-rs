@@ -1,4 +1,3 @@
-use std::cmp::max;
 use std::fs::File;
 use std::io::Write;
 use std::path::PathBuf;
@@ -12,7 +11,6 @@ int main()
 "#;
 
 pub struct Compiler {
-    pub size: u64,
     pub nesting: usize,
     pub tokens: Vec<char>,
     pub file: File,
@@ -22,33 +20,18 @@ pub struct Compiler {
 impl Compiler {
     pub fn new(source: String, output: PathBuf) -> Self {
         let mut tokens = vec![];
-        let mut positive: u64 = 0;
-        let mut negative: u64 = 0;
         for c in source.chars() {
             match c {
-                ',' | '.' | '+' | '-' | '[' | ']' => {
-                    tokens.push(c);
-                }
-                '<' => {
-                    negative += 1;
-                    tokens.push(c);
-                }
-                '>' => {
-                    positive += 1;
+                ',' | '.' | '+' | '-' | '[' | ']' | '<' | '>' => {
                     tokens.push(c);
                 }
                 _ => continue,
             }
         }
 
-        if negative > positive {
-            eprintln!("note: the pointer will eventually become negative");
-        }
-
         let file = File::create(output).expect("failed to write file");
 
         Compiler {
-            size: max(positive, negative),
             tokens,
             file,
             source: String::from(INFO),
@@ -57,7 +40,7 @@ impl Compiler {
     }
 
     fn init_array(&mut self) {
-        self.append_source(format!("char arr[{}] = {{0}}; char* ptr = arr;", self.size));
+        self.append_source("char arr[30000] = {0}; char* ptr = arr;");
     }
 
     fn append_source(&mut self, s: impl AsRef<str>) {
