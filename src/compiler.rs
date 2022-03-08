@@ -45,7 +45,7 @@ impl Compiler {
 
     fn append_source(&mut self, s: impl AsRef<str>) {
         let string = s.as_ref().to_string();
-        let fmt_string = format!("{}{}\n", "\t".repeat(self.nesting), string);
+        let fmt_string = format!("{}{}\n", "    ".repeat(self.nesting), string);
         self.source.push_str(fmt_string.as_str());
     }
 
