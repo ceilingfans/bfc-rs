@@ -217,3 +217,23 @@ fn parse_pointer_shift_decrement() {
         ]
     )
 }
+
+#[test]
+fn parse_read() {
+    assert_eq!(
+        parse(",").unwrap(),
+        [Read {
+            loc: Some(Location { start: 0, end: 0 })
+        }]
+    )
+}
+
+#[test]
+fn parse_write() {
+    assert_eq!(
+        parse(".").unwrap(),
+        [Write {
+            loc: Some(Location { start: 0, end: 0 })
+        }]
+    )
+}
