@@ -193,3 +193,27 @@ fn parse_pointer_shift_increment() {
         ]
     )
 }
+
+#[test]
+fn parse_pointer_shift_decrement() {
+    assert_eq!(
+        parse("<").unwrap(),
+        [PointerShift {
+            amount: -1,
+            loc: Some(Location { start: 0, end: 0 })
+        }]
+    );
+    assert_eq!(
+        parse("<<").unwrap(),
+        [
+            PointerShift {
+                amount: -1,
+                loc: Some(Location { start: 0, end: 0 })
+            },
+            PointerShift {
+                amount: -1,
+                loc: Some(Location { start: 1, end: 1 })
+            }
+        ]
+    )
+}
