@@ -186,10 +186,229 @@ Let's start by ignoring all the `#[derive(...)]` lines. With that said, we can n
 Lastly, `Loop` represents the '[' and ']' commands
 
 **Alright, but what does the 'i8', 'Option\<Location>' and 'Vec\<Node>' do?**
+
 The language we are writing the transpiler in is [Rust](https://www.rust-lang.org/) and those are the data types that are provided to us.
 
 **Okay but that doesn't answer my question, what even is 'i8'?? eight i's??**
 
-The `i8` data type represents an 8-bit signed integer which can hold any integer from **-128 to 127**
-The `Option<...>` data type is an enumeration with the values of Some and None, all you need to know is that it is basically an optional value.
-The `Vec<...>` data type represents a vector of sometimes, you can think of it as a list.
+* The `usize` data type is an architecture based unsigned integer data type, on 32-Bit systems, it is an unsigned 32 bit integer while on 64 bit systems it is a unsigned 64 bit integer
+* The `i8` data type represents an 8-bit signed integer which can hold any integer from **-128 to 127**
+* The `Option<...>` data type is an enumeration with the values of Some and None, all you need to know is that it is basically an optional value.
+* The `Vec<...>` data type represents a vector of sometimes, you can think of it as a list.
+
+**Woah, that's a lot to take in**
+
+It is certainly a lot to take in. Let's confuse you more, now we need to *parse* the tokens we got from our lexer. In this case, we are going to combine the Lexer and Parser as all tokens are single characters and do not need a special parser as we just need to iterate through each character 1 at a time.
+
+**Alright then, show me the code for the parser**
+```rust
+pub fn parse(source: &str) -> Result<Vec<Node>, ParserError> {
+    let mut instructions = vec![];
+    let mut stack = vec![];
+
+    for (index, c) in source.chars().enumerate() {
+        match c {
+            '+' => instructions.push(CellShift {
+                amount: 1,
+                loc: Some(Location {
+                    start: index,
+                    end: index,
+                }),
+            }),
+            '-' => instructions.push(CellShift {
+                amount: -1,
+                loc: Some(Location {
+                    start: index,
+                    end: index,
+                }),
+            }),
+            '>' => instructions.push(PointerShift {
+                amount: 1,
+                loc: Some(Location {
+                    start: index,
+                    end: index,
+                }),
+            }),
+            '<' => instructions.push(PointerShift {
+                amount: -1,
+                loc: Some(Location {
+                    start: index,
+                    end: index,
+                }),
+            }),
+            '.' => instructions.push(Write {
+                loc: Some(Location {
+                    start: index,
+                    end: index,
+                }),
+            }),
+            ',' => instructions.push(Read {
+                loc: Some(Location {
+                    start: index,
+                    end: index,
+                }),
+            }),
+            '[' => {
+                stack.push((instructions, index));
+                instructions = vec![];
+            }
+            ']' => {
+                if let Some((mut parent, open_index)) = stack.pop() {
+                    parent.push(Loop {
+                        body: instructions,
+                        loc: Some(Location {
+                            start: open_index,
+                            end: index,
+                        }),
+                    });
+                    instructions = parent;
+                } else {
+                    return Err(ParserError {
+                        message: "Unmatched bracket pair".to_owned(),
+                        loc: Location {
+                            start: index,
+                            end: index,
+                        },
+                    });
+                }
+            }
+            _ => {}
+        }
+    }
+
+    if !stack.is_empty() {
+        let pos = stack.last().unwrap().1;
+        return Err(ParserError {
+            message: "Unmatched bracket pair".to_owned(),
+            loc: Location {
+                start: pos,
+                end: pos,
+            },
+        });
+    }
+
+    Ok(instructions)
+}
+```
+
+**Let's start with the first line:**
+```rust
+pub fn parse(source: &str) -> Result<Vec<Node>, ParserError> {
+```
+This line declares the `parse` function and will contain the code that will *parse* a *string*, which is our text. The function will then return a **Vector** of **Node**s or a **ParserError**.
+
+```rust
+let mut instructions = vec![];
+let mut stack = vec![];
+```
+These lines create the storage we need to store what we have parsed. `instructions` will hold the potential return value of our parser while `stack` will hold the instructions of any loop it encounters, it also serves a secondary function of checking if we have properly used the `[]` syntax for loops.
+
+```rust
+for (index, c) in source.chars().enumerate() {
+```
+This line is quite crucial to our parser, it allows it to iterate through each character in our source.
+
+```rust
+match c {
+    '+' => instructions.push(CellShift {
+        amount: 1,
+        loc: Some(Location {
+            start: index,
+            end: index,
+        }),
+    }),
+    '-' => instructions.push(CellShift {
+        amount: -1,
+        loc: Some(Location {
+            start: index,
+            end: index,
+        }),
+    }),
+    '>' => instructions.push(PointerShift {
+        amount: 1,
+        loc: Some(Location {
+            start: index,
+            end: index,
+        }),
+    }),
+    '<' => instructions.push(PointerShift {
+        amount: -1,
+        loc: Some(Location {
+            start: index,
+            end: index,
+        }),
+    }),
+    '.' => instructions.push(Write {
+        loc: Some(Location {
+            start: index,
+            end: index,
+        }),
+    }),
+    ',' => instructions.push(Read {
+        loc: Some(Location {
+            start: index,
+            end: index,
+        }),
+    }),
+    '[' => {
+        stack.push((instructions, index));
+        instructions = vec![];
+    }
+    ']' => {
+        if let Some((mut parent, open_index)) = stack.pop() {
+            parent.push(Loop {
+                body: instructions,
+                loc: Some(Location {
+                    start: open_index,
+                    end: index,
+                }),
+            });
+            instructions = parent;
+        } else {
+            return Err(ParserError {
+                message: "Unmatched bracket pair".to_owned(),
+                loc: Location {
+                    start: index,
+                    end: index,
+                },
+            });
+        }
+    }
+    _ => {}
+}
+```
+These lines are the meat and bones of our parser, it matches the character with one of the Brainfuck commands. All the commands except the `[` and `]` are quite uninteresting. In that case, let's dive into what these do.
+```rust
+'[' => {
+    stack.push((instructions, index));
+    instructions = vec![];
+}
+```
+When we open a loop, we want to store the previous instructions into a temporary storage which is our stack. We then use the instructions vector to store the loop's body.
+
+```rust
+']' => {
+    if let Some((mut parent, open_index)) = stack.pop() {
+        parent.push(Loop {
+            body: instructions,
+            loc: Some(Location {
+                start: open_index,
+                end: index,
+            }),
+        });
+        instructions = parent;
+    } else {
+        return Err(ParserError {
+            message: "Unmatched bracket pair".to_owned(),
+            loc: Location {
+                start: index,
+                end: index,
+            },
+        });
+    }
+}
+```
+This large chunk of code *pops* an item off the stack, if it is valid, we use the instructions stored on the stack as the previous values and the values in the instructions stack as the loop body.
+
+The very last piece of code in the function checks if we closed all our bracket pairs.
+
