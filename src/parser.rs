@@ -1,5 +1,5 @@
-use std::slice::SliceIndex;
 use self::Node::*;
+use std::slice::SliceIndex;
 
 #[derive(Debug, PartialEq)]
 pub struct Location {
@@ -46,45 +46,45 @@ pub fn parse(source: &str) -> Result<Vec<Node>, ParserError> {
                 loc: Some(Location {
                     start: index,
                     end: index,
-                })
+                }),
             }),
             '-' => instructions.push(CellShift {
                 amount: -1,
                 loc: Some(Location {
                     start: index,
                     end: index,
-                })
+                }),
             }),
             '>' => instructions.push(PointerShift {
                 amount: 1,
                 loc: Some(Location {
                     start: index,
                     end: index,
-                })
+                }),
             }),
             '<' => instructions.push(PointerShift {
                 amount: -1,
                 loc: Some(Location {
                     start: index,
                     end: index,
-                })
+                }),
             }),
             '.' => instructions.push(Write {
                 loc: Some(Location {
                     start: index,
                     end: index,
-                })
+                }),
             }),
             ',' => instructions.push(Read {
                 loc: Some(Location {
                     start: index,
                     end: index,
-                })
+                }),
             }),
             '[' => {
                 stack.push((instructions, index));
                 instructions = vec![];
-            },
+            }
             ']' => {
                 if let Some((mut parent, open_index)) = stack.pop() {
                     parent.push(Loop {
@@ -92,7 +92,7 @@ pub fn parse(source: &str) -> Result<Vec<Node>, ParserError> {
                         loc: Some(Location {
                             start: open_index,
                             end: index,
-                        })
+                        }),
                     });
                     instructions = parent;
                 } else {
@@ -101,11 +101,11 @@ pub fn parse(source: &str) -> Result<Vec<Node>, ParserError> {
                         loc: Location {
                             start: index,
                             end: index,
-                        }
+                        },
                     });
                 }
             }
-            _ => {},
+            _ => {}
         }
     }
 
@@ -116,8 +116,8 @@ pub fn parse(source: &str) -> Result<Vec<Node>, ParserError> {
             loc: Location {
                 start: pos,
                 end: pos,
-            }
-        })
+            },
+        });
     }
 
     Ok(instructions)
