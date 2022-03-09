@@ -191,7 +191,7 @@ fn parse_pointer_shift_increment() {
                 loc: Some(Location { start: 1, end: 1 })
             }
         ]
-    )
+    );
 }
 
 #[test]
@@ -215,7 +215,7 @@ fn parse_pointer_shift_decrement() {
                 loc: Some(Location { start: 1, end: 1 })
             }
         ]
-    )
+    );
 }
 
 #[test]
@@ -225,7 +225,7 @@ fn parse_read() {
         [Read {
             loc: Some(Location { start: 0, end: 0 })
         }]
-    )
+    );
 }
 
 #[test]
@@ -235,5 +235,14 @@ fn parse_write() {
         [Write {
             loc: Some(Location { start: 0, end: 0 })
         }]
-    )
+    );
+}
+
+#[test]
+fn parse_empty_loop() {
+    let expected = Loop {
+        body: vec![],
+        loc: Some(Location { start: 0, end: 1 }),
+    };
+    assert_eq!(parse("[]").unwrap(), [expected]);
 }
