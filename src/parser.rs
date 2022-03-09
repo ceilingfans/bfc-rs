@@ -321,3 +321,14 @@ fn parse_loop_with_unmatched_brackets() {
     assert!(parse("]").is_err());
     assert!(parse("[][][[]][++[]").is_err());
 }
+
+#[test]
+fn parse_source_with_comments() {
+    assert_eq!(
+        parse("+ hello").unwrap(),
+        [CellShift {
+            amount: 1,
+            loc: Some(Location { start: 0, end: 0 })
+        }]
+    );
+}
