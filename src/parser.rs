@@ -143,5 +143,29 @@ fn parse_cell_shift() {
                 loc: Some(Location { start: 1, end: 1 })
             }
         ]
-    )
+    );
+}
+
+#[test]
+fn parse_decrement() {
+    assert_eq!(
+        parse("-").unwrap(),
+        [CellShift {
+            amount: -1,
+            loc: Some(Location { start: 0, end: 0 })
+        }]
+    );
+    assert_eq!(
+        parse("--").unwrap(),
+        [
+            CellShift {
+                amount: -1,
+                loc: Some(Location { start: 0, end: 0 }),
+            },
+            CellShift {
+                amount: -1,
+                loc: Some(Location { start: 1, end: 1 })
+            }
+        ]
+    );
 }
