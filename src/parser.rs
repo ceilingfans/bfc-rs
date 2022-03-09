@@ -258,3 +258,58 @@ fn parse_simple_loop() {
     };
     assert_eq!(parse("[-]").unwrap(), [expected]);
 }
+
+#[test]
+fn parse_complex_loop() {
+    let expected = vec![
+        PointerShift {
+            amount: 1,
+            loc: Some(Location { start: 0, end: 0 }),
+        },
+        CellShift {
+            amount: 1,
+            loc: Some(Location { start: 1, end: 1 }),
+        },
+        CellShift {
+            amount: 1,
+            loc: Some(Location { start: 2, end: 2 }),
+        },
+        Loop {
+            body: vec![
+                PointerShift {
+                    amount: -1,
+                    loc: Some(Location { start: 4, end: 4 }),
+                },
+                CellShift {
+                    amount: 1,
+                    loc: Some(Location { start: 5, end: 5 }),
+                },
+                CellShift {
+                    amount: 1,
+                    loc: Some(Location { start: 6, end: 6 }),
+                },
+                CellShift {
+                    amount: 1,
+                    loc: Some(Location { start: 7, end: 7 }),
+                },
+                PointerShift {
+                    amount: 1,
+                    loc: Some(Location { start: 8, end: 8 }),
+                },
+                CellShift {
+                    amount: -1,
+                    loc: Some(Location { start: 9, end: 9 }),
+                },
+            ],
+            loc: Some(Location { start: 3, end: 10 }),
+        },
+        PointerShift {
+            amount: -1,
+            loc: Some(Location { start: 11, end: 11 }),
+        },
+        Write {
+            loc: Some(Location { start: 12, end: 12 }),
+        },
+    ];
+    assert_eq!(parse(">++[<+++>-]<.").unwrap(), expected,);
+}
