@@ -1,3 +1,4 @@
+
 # bfc-rs
 Yet another [Brainfuck](https://en.wikipedia.org/wiki/Brainfuck) to C transpiler.
 
@@ -128,10 +129,12 @@ assign-to-variable
 ```
 
 **Woah, that tree is upside down**
+
 Yup, in computer science most trees are upside down, this is probably why they dont make good plants. Alright then, now we have our tree, so the computer finally can understand the expression.
 
 ## Lets apply this to the project
 **Tokens**
+
 Brainfuck has only 8 tokens --- this may or may not be the reason I chose to use this language
 These tokens are:
 * \+ --- Increments the current cell's value by 1
@@ -144,6 +147,7 @@ These tokens are:
 * . --- Writes the byte stored in the current cell to the standard output
 
 **Let's see some code**
+
 ```rust
 #[derive(Debug, PartialEq)]  
 pub struct Location {  
@@ -174,6 +178,7 @@ pub enum Node {
 }
 ```
 **Jeez, what the hell is that**
+
 Let's start by ignoring all the `#[derive(...)]` lines. With that said, we can now dive into the code, we first want to look at the `Location` structure, This structure allows us to locate where the token is in the code. Now let's take a look at the cooler data type, the `Node` enumeration. What is it? --- This enumeration represents the different tokens mentioned above.
 `CellShift` represents the '+' and '-' commands in Brainfuck,
 `PointerShift` represents the '>' and '<' commands,
@@ -184,6 +189,7 @@ Lastly, `Loop` represents the '[' and ']' commands
 The language we are writing the transpiler in is [Rust](https://www.rust-lang.org/) and those are the data types that are provided to us.
 
 **Okay but that doesn't answer my question, what even is 'i8'?? eight i's??**
+
 The `i8` data type represents an 8-bit signed integer which can hold any integer from **-128 to 127**
 The `Option<...>` data type is an enumeration with the values of Some and None, all you need to know is that it is basically an optional value.
 The `Vec<...>` data type represents a vector of sometimes, you can think of it as a list.
