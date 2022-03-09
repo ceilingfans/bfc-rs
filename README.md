@@ -24,7 +24,7 @@ In *all* programming languages, to convert human-readable text to something the 
 A lexer is a program that takes the source code and translates it into a stream of things called [Tokens](https://en.wikipedia.org/wiki/Lexical_analysis#Tokenization). Now you might still ask, "what is a token, this is getting more confusing".
 
 A token is basically something that the computer can use to group your source code into specific chunks.
-An example --- let's take a English sentence, `I am sleeping.`, and act like the lexer. We can *tokenize* the sentence into something like:
+An example --- let's take an English sentence, `I am sleeping.`, and act like the lexer. We can *tokenize* the sentence into something like:
 ```
 Pronoun {
 	literal: "I"
@@ -48,8 +48,8 @@ Once we have our stream of tokens, we need to parse it. "how do you do that??" m
 To *parse* the stream of tokens we need to write a program called the [Parser](https://en.wikipedia.org/wiki/Parsing) (who would have guessed). "what does the parser give you?", well in most cases, it will return an [Abstract Syntax Tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree).
 
 The Abstract Syntax Tree. What even is that?? Which country does the tree come from??
-No, its not a plant, its just a data structure most programming languages use to grammarticize the stream of tokens.
-Lets take math for example. Say we have a simple expression like `x = 1 + 2 * 3`. Once we *tokenize* it we will get something like:
+No, it's not a plant, it's just a data structure most programming languages use to grammarticize the stream of tokens.
+Let's take math for example. Say we have a simple expression like `x = 1 + 2 * 3`. Once we *tokenize* it we will get something like:
 ```
 Variable {
 	literal: "x",
@@ -130,7 +130,7 @@ assign-to-variable
 
 **Woah, that tree is upside down**
 
-Yup, in computer science most trees are upside down, this is probably why they dont make good plants. Alright then, now we have our tree, so the computer finally can understand the expression.
+Yup, in computer science most trees are upside down, this is probably why they don't make good plants. Alright then, now we have our tree, so the computer finally can understand the expression.
 
 ## Let's apply this to the project
 **Tokens**
@@ -182,7 +182,7 @@ pub enum Node {
 Let's start by ignoring all the `#[derive(...)]` lines. With that said, we can now dive into the code, we first want to look at the `Location` structure, This structure allows us to locate where the token is in the code. Now let's take a look at the cooler data type, the `Node` enumeration. What is it? --- This enumeration represents the different tokens mentioned above.
 `CellShift` represents the '+' and '-' commands in Brainfuck,
 `PointerShift` represents the '>' and '<' commands,
-`Read` and `Write` represent the ',' and '.' commands repectively
+`Read` and `Write` represent the ',' and '.' commands respectively
 Lastly, `Loop` represents the '[' and ']' commands
 
 **Alright, but what does the 'i8', 'Option\<Location>' and 'Vec\<Node>' do?**
