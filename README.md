@@ -120,12 +120,12 @@ assign-to-variable
 		|
 	-----------
 	|    |    ┕ expression
-	|	 ┕ =		|
-	┕x		        ┕ add-minus-expression
-						    |    | 	 ┕ divide-multiply-expression
-						    |	 ┕ +		|		|		┕ 3
-						    ┕ 1				|		┕ *
-										    ┕ 2
+	|    ┕ =	|
+	┕x		┕ add-minus-expression
+			     |    | 	┕ divide-multiply-expression
+			     |	  ┕ +	    |		|       ┕ 3
+			     ┕ 1	    |		┕ *
+			    		    ┕ 2
 ```
 
 **Woah, that tree is upside down**
