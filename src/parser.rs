@@ -246,3 +246,15 @@ fn parse_empty_loop() {
     };
     assert_eq!(parse("[]").unwrap(), [expected]);
 }
+
+#[test]
+fn parse_simple_loop() {
+    let expected = Loop {
+        body: vec![CellShift {
+            amount: -1,
+            loc: Some(Location { start: 1, end: 1 }),
+        }],
+        loc: Some(Location { start: 0, end: 2 }),
+    };
+    assert_eq!(parse("[-]").unwrap(), [expected]);
+}
