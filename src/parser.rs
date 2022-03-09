@@ -311,5 +311,13 @@ fn parse_complex_loop() {
             loc: Some(Location { start: 12, end: 12 }),
         },
     ];
-    assert_eq!(parse(">++[<+++>-]<.").unwrap(), expected,);
+    assert_eq!(parse(">++[<+++>-]<.").unwrap(), expected);
+}
+
+#[test]
+fn parse_loop_with_unmatched_brackets() {
+    assert!(parse("[").is_err());
+    assert!(parse("[[]").is_err());
+    assert!(parse("]").is_err());
+    assert!(parse("[][][[]][++[]").is_err());
 }
