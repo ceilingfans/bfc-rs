@@ -1,5 +1,4 @@
 use self::Node::*;
-use std::slice::SliceIndex;
 
 #[derive(Debug, PartialEq)]
 pub struct Location {
@@ -121,4 +120,28 @@ pub fn parse(source: &str) -> Result<Vec<Node>, ParserError> {
     }
 
     Ok(instructions)
+}
+
+#[test]
+fn parse_cell_shift() {
+    assert_eq!(
+        parse("+").unwrap(),
+        [CellShift {
+            amount: 1,
+            loc: Some(Location { start: 0, end: 0 })
+        }]
+    );
+    assert_eq!(
+        parse("++").unwrap(),
+        [
+            CellShift {
+                amount: 1,
+                loc: Some(Location { start: 0, end: 0 }),
+            },
+            CellShift {
+                amount: 1,
+                loc: Some(Location { start: 1, end: 1 })
+            }
+        ]
+    )
 }
