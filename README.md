@@ -132,7 +132,7 @@ assign-to-variable
 
 Yup, in computer science most trees are upside down, this is probably why they dont make good plants. Alright then, now we have our tree, so the computer finally can understand the expression.
 
-## Lets apply this to the project
+## Let's apply this to the project
 **Tokens**
 
 Brainfuck has only 8 tokens --- this may or may not be the reason I chose to use this language
