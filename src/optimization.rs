@@ -10,7 +10,7 @@ impl Merge<Option<Location>> for Option<Location> {
     fn merge(&self, other: Option<Location>) -> Option<Location> {
         match (*self, other) {
             (Some(self_loc), Some(other_loc)) => {
-                let (first_loc, second_loc) = if self_loc.start >= other_loc.start {
+                let (first_loc, second_loc) = if self_loc.start <= other_loc.start {
                     (self_loc, other_loc)
                 } else {
                     (other_loc, self_loc)
