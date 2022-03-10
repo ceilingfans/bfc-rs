@@ -119,7 +119,7 @@ pub fn merge_pointer_shifts(instructions: Vec<Node>) -> Vec<Node> {
 }
 
 #[test]
-fn test_merge_cell_shifts() {
+fn merge_cell_shifts_simple() {
     let tree = parse("+++").unwrap();
     let expected = vec![Node::CellShift {
         amount: 3,
@@ -129,7 +129,7 @@ fn test_merge_cell_shifts() {
 }
 
 #[test]
-fn test_non_concurrent_shifts_merge_cell_shifts() {
+fn merge_cell_shifts_non_concurrent() {
     let tree = parse("+>,+").unwrap();
     let expected = tree.clone();
 
