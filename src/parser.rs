@@ -1,12 +1,12 @@
 use self::Node::*;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Copy, Clone)]
 pub struct Location {
     pub start: usize,
     pub end: usize,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Copy, Clone)]
 pub enum Node {
     CellShift {
         amount: i8,
