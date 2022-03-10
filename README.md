@@ -30,6 +30,48 @@ ARGS:
 $ cargo run -- hello_world.bf -o hello_world.c
 ```
 
+# Table of Contents
+<details>
+    <summary>Documenting the Process</summary>
+    <ol>
+        <li>
+            <a href="#brainfuck">What is Brainfuck?</a>
+        </li>
+        <li>
+            <a href="#lexing">Lexer</a>
+            <ul>
+                <li><a href="#explanation">What is lexing?</a></li>
+                <li><a href="#tokens">Tokens</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#parsing">Parser</a>
+            <ul>
+                <li><a href="abstract-syntax-tree">What is an Abstract Syntax Tree</a></li>
+                <li><a href="grammar">Understanding Grammar</a></li>
+                <li><a href="equations-in-real-life">Applying to a basic math expression</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#application">Applying this to bfc-rs</a>
+            <ul>
+                <li><a href="#tokens-1">Tokenizing Brainfuck commands</a></li>
+                <li><a href="#looking-at-the-source">A look into the code</a></li>
+                <li><a href="#explaining-the-code">What the code does</a></li>
+                <li><a href="#more-rust">Even more confusing code</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#optimization">Optimizing our code generation</a>
+            <ul>
+                <li><a href="#why">Reasons for optimizations</a></li>
+                <li><a href="#application-1">Applying it to bfc-rs</a></li>
+                <li><a href="#modern-compilers">Optimizations by modern compilers</a></li>
+            </ul>
+        </li>
+    </ol>
+</details>
+
 # Documenting the Process
 ## Brainfuck
 **What on earth is Brainfuck?**
