@@ -191,7 +191,7 @@ The language we are writing the transpiler in is [Rust](https://www.rust-lang.or
 
 **Okay but that doesn't answer my question, what even is 'i8'?? eight i's??**
 
-* The `usize` data type is an architecture based unsigned integer data type, on 32-Bit systems, it is an unsigned 32 bit integer while on 64 bit systems it is a unsigned 64 bit integer
+* The `usize` data type is an architecture based unsigned integer data type, on 32-Bit systems, it is an unsigned 32-bit integer while on 64-bit systems it is an unsigned 64-bit integer
 * The `i8` data type represents an 8-bit signed integer which can hold any integer from **-128 to 127**
 * The `Option<...>` data type is an enumeration with the values of Some and None, all you need to know is that it is basically an optional value.
 * The `Vec<...>` data type represents a vector of sometimes, you can think of it as a list.
