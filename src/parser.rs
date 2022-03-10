@@ -6,7 +6,7 @@ pub struct Location {
     pub end: usize,
 }
 
-#[derive(Debug, PartialEq, Copy, Clone)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum Node {
     CellShift {
         amount: i8,
@@ -24,6 +24,10 @@ pub enum Node {
     },
     Loop {
         body: Vec<Node>,
+        loc: Option<Location>,
+    },
+    Set {
+        amount: i8,
         loc: Option<Location>,
     },
 }
