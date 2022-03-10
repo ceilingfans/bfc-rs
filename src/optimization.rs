@@ -117,3 +117,13 @@ pub fn merge_pointer_shifts(instructions: Vec<Node>) -> Vec<Node> {
         })
         .map_loops(merge_pointer_shifts)
 }
+
+#[test]
+fn test_merge_cell_shifts() {
+    let tree = parse("+++").unwrap();
+    let expected = vec![Node::CellShift {
+        amount: 3,
+        loc: Some(Location { start: 0, end: 2 }),
+    }];
+    assert_eq!(merge_cell_shifts(tree), expected);
+}
