@@ -148,3 +148,9 @@ fn merge_cell_shifts_in_loop() {
     }];
     assert_eq!(merge_cell_shifts(tree), expected);
 }
+
+#[test]
+fn merge_cell_shifts_useless() {
+    let tree = parse("++--").unwrap();
+    assert_eq!(merge_cell_shifts(tree), vec![]);
+}
