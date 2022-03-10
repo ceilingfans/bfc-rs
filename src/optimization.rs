@@ -135,3 +135,16 @@ fn merge_cell_shifts_non_concurrent() {
 
     assert_eq!(merge_cell_shifts(tree), expected);
 }
+
+#[test]
+fn merge_cell_shifts_in_loop() {
+    let tree = parse("[++]").unwrap();
+    let expected = vec![Node::Loop {
+        body: vec![Node::CellShift {
+            amount: 2,
+            loc: Some(Location { start: 1, end: 2 }),
+        }],
+        loc: Some(Location { start: 0, end: 3 }),
+    }];
+    assert_eq!(merge_cell_shifts(tree), expected);
+}
