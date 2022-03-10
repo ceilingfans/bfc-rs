@@ -46,5 +46,7 @@ fn main() {
                 return;
             }
         }
+    } else if let Err(e) = r {
+        eprintln!("error: {}", e.to_string());
     }
 }
