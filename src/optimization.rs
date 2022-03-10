@@ -127,3 +127,11 @@ fn test_merge_cell_shifts() {
     }];
     assert_eq!(merge_cell_shifts(tree), expected);
 }
+
+#[test]
+fn test_non_concurrent_shifts_merge_cell_shifts() {
+    let tree = parse("+>,+").unwrap();
+    let expected = tree.clone();
+
+    assert_eq!(merge_cell_shifts(tree), expected);
+}
