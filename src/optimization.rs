@@ -2,6 +2,35 @@ use crate::parser::*;
 
 use itertools::Itertools;
 
+pub fn optimize(instructions: Vec<Node>) -> Vec<Node> {
+    let mut previous = instructions.clone();
+    let mut res = optimize_once(instructions);
+
+    println!("info: beginning optimization");
+    for i in 0..20 {
+        println!("info: optimization pass: {}", i + 1);
+        if previous == res {
+            println!("info: optimization complete");
+            return res;
+        }
+        previous = res.clone();
+        res = optimize_once(res);
+    }
+
+    eprintln!("warning: no fixed optimized state after 20 attempts");
+    res
+}
+
+fn optimize_once(instructions: Vec<Node>) -> Vec<Node> {
+    let mut instructions = instructions;
+
+    instructions = merge_cell_shifts(instructions);
+    instructions = merge_pointer_shifts(instructions);
+    instructions = zero_loop(instructions);
+
+    instructions
+}
+
 pub trait Merge<T> {
     fn merge(&self, other: T) -> T;
 }
