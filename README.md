@@ -2,27 +2,50 @@
 # bfc-rs
 Yet another [Brainfuck](https://en.wikipedia.org/wiki/Brainfuck) to C transpiler.
 
-### Getting Started
-todo
-
+## Getting Started
 ### Build
-todo
+```shell
+$ cargo build
+```
 
 ### Usage
-todo
+```
+bfc 0.1.0
+
+USAGE:
+    bfc-rs [OPTIONS] <input>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+    -o, --out <out>    output file [default: out.c]
+
+ARGS:
+    <input>    input file
+```
+### Example
+```shell
+$ cargo run -- hello_world.bf -o hello_world.c
+```
 
 # Documenting the Process
+## Brainfuck
 **What on earth is Brainfuck?**
 
 Brainfuck is an esoteric programming language created in 1993 by Urban Müller.  
 Notable for its extreme minimalism, the language consists of only eight simple commands, a data pointer and an instruction pointer. While it is fully Turing complete, it is not intended for practical use, but to challenge and amuse programmers. Brainfuck simply requires one to break commands into microscopic steps.
 
+## Lexing
 **Okay, now what do we start with?**
 
+### Explanation
 In *all* programming languages, to convert human-readable text to something the computer can understand, we need to write a [Lexer](https://en.wikipedia.org/wiki/Lexical_analysis). Now you might be wondering, "what is a lexer, never heard of it". Well let's take a look at it.
 
 A lexer is a program that takes the source code and translates it into a stream of things called [Tokens](https://en.wikipedia.org/wiki/Lexical_analysis#Tokenization). Now you might still ask, "what is a token, this is getting more confusing".
 
+### Tokens
 A token is basically something that the computer can use to group your source code into specific chunks.
 An example --- let's take an English sentence, `I am sleeping.`, and act like the lexer. We can *tokenize* the sentence into something like:
 ```
@@ -41,12 +64,14 @@ Punctuation(Period) {
 ```
 Now you may be wondering, "what does that even mean? what is up with the funky curly braces?". What the diagram shows is how we can group text into specific chunks. In the example we used `I am sleeping.` as the text and *tokenized* it to `[ Pronoun, Verb, Verb, Punctuation ]`. You may be still wonder why do we even need to *tokenize* text --- afterall, can't the computer just translate the text to something we can run? We need to understand that computers have no idea what the concept of grammar and text are, text is stored as a bunch of numbers.
 
+## Parsing
 **Alright, I think I know what a Lexer is, now what?**
 
 Once we have our stream of tokens, we need to parse it. "how do you do that??" might be the question in your mind now, so let's answer it.
 
 To *parse* the stream of tokens we need to write a program called the [Parser](https://en.wikipedia.org/wiki/Parsing) (who would have guessed). "what does the parser give you?", well in most cases, it will return an [Abstract Syntax Tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree).
 
+### Abstract Syntax Tree
 The Abstract Syntax Tree. What even is that?? Which country does the tree come from??
 No, it's not a plant, it's just a data structure most programming languages use to grammarticize the stream of tokens.
 Let's take math for example. Say we have a simple expression like `x = 1 + 2 * 3`. Once we *tokenize* it we will get something like:
@@ -86,6 +111,7 @@ x = 7
 But how do you get the computer to do this? And why did I use this expression specifically?
 Firstly, we need to understand the [Precedence](https://en.wikipedia.org/wiki/Order_of_operations) of operations in math, from a young age we should have learned the acronym of BODMAS where we evaluate the brackets first, then the orders (indices and roots), then the divisions, then the multiplications, then the additions and subtractions. This is why I used this expression as the example, it shows how we need to parse the equation before we evaluate it.
 
+### Grammar
 **Cool, let me see the Abstract Syntax Tree of the expression now**
 
 Alright then, but before that, let's try to define a grammar on how very basic math works:
@@ -111,6 +137,7 @@ add: +
 number: [self-explanatory]
 ```
 
+### Equations in real life
 Now this might make no sense to you but hopefully once you see the Abstract Syntax Tree this generates using the example expression we evaluated mentally above it will make more sense.
 ```
 x = 1 + 2 * 3
@@ -132,8 +159,8 @@ assign-to-variable
 
 Yup, in computer science most trees are upside down, this is probably why they don't make good plants. Alright then, now we have our tree, so the computer finally can understand the expression.
 
-## Let's apply this to the project
-**Tokens**
+## Application
+### Tokens
 
 Brainfuck has only 8 tokens --- this may or may not be the reason I chose to use this language
 These tokens are:
@@ -146,6 +173,7 @@ These tokens are:
 * , --- Reads a single [Byte](https://en.wikipedia.org/wiki/Byte) from the standard input
 * . --- Writes the byte stored in the current cell to the standard output
 
+### Looking at the source
 **Let's see some code**
 
 ```rust
@@ -179,6 +207,7 @@ pub enum Node {
 ```
 **Jeez, what the hell is that**
 
+### Explaining the code
 Let's start by ignoring all the `#[derive(...)]` lines. With that said, we can now dive into the code, we first want to look at the `Location` structure, This structure allows us to locate where the token is in the code. Now let's take a look at the cooler data type, the `Node` enumeration. What is it? --- This enumeration represents the different tokens mentioned above.
 `CellShift` represents the '+' and '-' commands in Brainfuck,
 `PointerShift` represents the '>' and '<' commands,
@@ -200,6 +229,7 @@ The language we are writing the transpiler in is [Rust](https://www.rust-lang.or
 
 It is certainly a lot to take in. Let's confuse you more, now we need to *parse* the tokens we got from our lexer. In this case, we are going to combine the Lexer and Parser as all tokens are single characters and do not need a special parser as we just need to iterate through each character 1 at a time.
 
+### More rust
 **Alright then, show me the code for the parser**
 ```rust
 pub fn parse(source: &str) -> Result<Vec<Node>, ParserError> {
@@ -412,3 +442,31 @@ This large chunk of code *pops* an item off the stack, if it is valid, we use th
 
 The very last piece of code in the function checks if we closed all our bracket pairs.
 
+## Optimization
+### Why
+When we write code, we want it to be run fast and use little resources. That is where optimization comes in, optimization gives us the benefits of reducing resource intake aswell as speeding up run times.
+
+### Application
+**Now you may be wondering, "okay all this talk about optimizing but can we see an example of this"**
+
+To that I answer yes, let's take a look at how we can optimize Brainfuck code that is directly transpiled.
+Imagine we have `-----` as our Brainfuck code, if we transpile it with no optimizations it would look like this:
+```c
+*ptr -= 1;
+*ptr -= 1;
+*ptr -= 1;
+*ptr -= 1;
+*ptr -= 1;
+```
+As you might see, this is very inefficient. You can imagine it like moving plates around, if we don't optimize our plate movement, we need to move each plate one by one.
+But if we optimize it, our transpiled code would look like:
+```c
+*ptr -= 5;
+```
+With that we just made our life so much easy, instead of taking each plate slowly and individually, we took all 5 at once.
+
+### Modern Compilers
+Modern compilers such as `rustc`, `gcc`, `g++` or `clang` have much more optimizations which I won't be able to cover. It is amazing the different ways compiler designers have come up with to save a few bytes here and there.
+
+## Transpilation
+Honestly, I just copy pasted the corresponding code from WikiPedia
