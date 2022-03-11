@@ -46,8 +46,12 @@ impl Transpiler {
 
         for tok in to_iterate {
             match tok {
-                Node::CellShift { amount, .. } => self.append_to_source(format!("*ptr += {};", amount)),
-                Node::PointerShift { amount, .. } => self.append_to_source(format!("ptr += {};", amount)),
+                Node::CellShift { amount, .. } => {
+                    self.append_to_source(format!("*ptr += {};", amount))
+                }
+                Node::PointerShift { amount, .. } => {
+                    self.append_to_source(format!("ptr += {};", amount))
+                }
                 Node::Read { .. } => self.append_to_source("*ptr = getchar();"),
                 Node::Write { .. } => self.append_to_source("putchar(*ptr);"),
                 Node::Loop { body, .. } => {
@@ -57,7 +61,7 @@ impl Transpiler {
                     self.write(Some(body));
                     self.nesting -= 1;
                     self.append_to_source("}");
-                },
+                }
                 Node::Set { amount, .. } => self.append_to_source(format!("*ptr = {};", amount)),
             }
         }
@@ -70,7 +74,9 @@ impl Transpiler {
         self.nesting -= 1;
         self.append_to_source("}");
         println!("info: writing to c file");
-        self.out.write(self.source.as_bytes()).expect("failed to write file");
+        self.out
+            .write(self.source.as_bytes())
+            .expect("failed to write file");
         println!("info: completed transpilation process")
     }
 }

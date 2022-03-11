@@ -40,7 +40,7 @@ fn main() {
 
                 let mut transpiler = transpiler::Transpiler::new(tree, opt.out);
                 transpiler.transpile();
-            },
+            }
             Err(e) => {
                 eprintln!("error: {}", e.message);
                 return;
